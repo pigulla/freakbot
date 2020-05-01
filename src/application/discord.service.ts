@@ -37,6 +37,7 @@ export class Discord implements IDiscord {
         }
         
         this.voice_connection = await channel.join()
+        
         await this.discord_client.set_activity(`Nervt grad alle in ${channel.name}`)
     }
     
@@ -49,19 +50,19 @@ export class Discord implements IDiscord {
         const {promise, reject, resolve} = new_promise<void>()
         const stream_dispatcher = this.voice_connection.play(sound.filename)
         
-        function on_close() {
+        function on_finish () {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             stream_dispatcher.off('error', on_error)
             resolve()
         }
         
         function on_error (error: Error) {
-            stream_dispatcher.off('close', on_close)
+            stream_dispatcher.off('finish', on_finish)
             reject(error)
         }
         
         stream_dispatcher.once('error', on_error)
-        stream_dispatcher.once('close', on_close)
+        stream_dispatcher.once('finish', on_finish)
         
         return promise
     } 

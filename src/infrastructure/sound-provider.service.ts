@@ -20,7 +20,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
 
         this.logger.info('Service instantiated')
     }
-    
+
     public async onModuleInit(): Promise<void> {
         const index_file = join(this.directory, 'index.json')
         const buffer = await fs.readFile(index_file)
@@ -29,7 +29,11 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.map.clear()
 
         Object.entries(object)
-            .map(([filename, title]) => ({filename, title, id: basename(filename) as SoundID}))
+            .map(([filename, title]) => ({
+                filename: join(this.directory, filename),
+                title,
+                id: basename(filename) as SoundID,
+            }))
             .forEach(({filename, title, id}) => this.map.set(id, {title, filename, id}))
 
         this.logger.info('Service initialized')

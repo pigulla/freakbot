@@ -12,6 +12,7 @@ export interface Configuration {
     }
 
     readonly discord_client_token: string
+    readonly discord_user_id: string
 
     readonly sound_files_path: string
 }
@@ -30,5 +31,6 @@ export const configuration_schema = joi.object().keys({
         discord_client: log_level,
     }).required(),
     discord_client_token: joi.string().min(1).required(),
+    discord_user_id: joi.string().min(1).required(),
     sound_files_path: joi.string().min(1).required(),
 })

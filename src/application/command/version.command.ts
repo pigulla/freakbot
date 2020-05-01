@@ -1,38 +1,40 @@
-import { Inject, OnModuleInit } from '@nestjs/common'
-import read_pkg_up from 'read-pkg-up'
-import semver, { SemVer } from 'semver'
+import {Inject} from '@nestjs/common'
+import {Message} from 'discord.js'
+import {CommandoMessage, CommandoClient} from 'discord.js-commando'
+import {NormalizedPackageJson} from 'read-pkg-up'
 
-import { ILogger } from '../../domain'
-import { AbstractCommand } from '../../domain'
+import {CommandGroup, ILogger} from '../../domain'
 
-export class VersionCommand extends AbstractCommand implements OnModuleInit {
-    private version: SemVer | null
+import {AbstractCommand} from './abstract-command'
 
-    public constructor(@Inject('ILogger') logger: ILogger) {
-        super(logger)
+type Args = {}
 
-        this.version = null
-        this.logger.info('Command handler instantiated')
+export class VersionCommand extends AbstractCommand<Args> {
+    private readonly package_json: NormalizedPackageJson
+
+    public constructor(
+        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('package.json') package_json: NormalizedPackageJson,
+        @Inject('ILogger') logger: ILogger,
+    ) {
+        super(
+            commando_client,
+            {
+                name: 'version',
+                aliases: [],
+                group: CommandGroup.META,
+                memberName: 'version',
+                description: 'Displays the version of the Freakbot.',
+            },
+            logger,
+        )
+
+        this.package_json = package_json
+
+        this.logger.debug('Service instantiated')
     }
 
-    public async onModuleInit(): Promise<void> {
-        const pkg = await read_pkg_up()
-
-        if (!pkg) {
-            throw new Error('Failed to read package.json')
-        }
-        
-        const version = semver.parse(pkg.packageJson.version)
-
-        if (!version) {
-            throw new Error('Failed to parse package version')
-        }
-        
-        this.version = version
-    }
-    
-    public async handle(_argv: string[]): Promise<string | null> {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return `3 x 14 is 38 und 12 das gibt ${this.version!.format()}`
+    protected async do_run(msg: CommandoMessage, _args: Args): Promise<Message | Message[]> {
+        return msg.reply(`3 x 14 is 38 und 12 das gibt ${this.package_json.version}...`)
     }
 }

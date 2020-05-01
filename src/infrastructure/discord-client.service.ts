@@ -1,95 +1,75 @@
 import {Inject, Injectable, OnModuleInit} from '@nestjs/common'
-import Discord, {Intents, Message} from 'discord.js'
+import {ModuleRef} from '@nestjs/core'
+import {CommandoClient, Command, ArgumentType} from 'discord.js-commando'
+import {Class} from 'type-fest'
 
-import {parse_client_command, UnparsableCommandError} from '../application'
-import {ILogger, Configuration, IDispatcher} from '../domain'
+import {AbstractCommand} from '../application/command/abstract-command'
+import {ILogger, Configuration, command_groups} from '../domain'
 import {new_promise} from '../util'
 
-import {IDiscordClient} from './discord-client.interface'
-
 @Injectable()
-export class DiscordClient implements IDiscordClient, OnModuleInit {
-    private readonly client: Discord.Client
-
-    private readonly dispatcher: IDispatcher
-
+export class DiscordClient implements OnModuleInit {
+    private readonly commando_client: CommandoClient
     private readonly client_token: string
-
     private readonly logger: ILogger
+    private readonly command_classes: Class<Command>[]
+    private readonly argument_type_classes: Class<ArgumentType>[]
+    private readonly module_ref: ModuleRef
 
     public constructor(
-        @Inject('IDispatcher') dispatcher: IDispatcher,
+        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('Commands') command_classes: Class<AbstractCommand<any>>[],
+        @Inject('CustomArgumentTypes') argument_type_classes: Class<ArgumentType>[],
         @Inject('Configuration') config: Configuration,
         @Inject('ILogger') logger: ILogger,
+        module_ref: ModuleRef,
     ) {
-        this.dispatcher = dispatcher
         this.logger = logger.child_for_service(DiscordClient.name)
-        this.client = new Discord.Client({ws: {intents: Intents.NON_PRIVILEGED}})
+        this.commando_client = commando_client
         this.client_token = config.discord_client_token
+        this.command_classes = command_classes
+        this.argument_type_classes = argument_type_classes
+        this.module_ref = module_ref
 
         const discord_logger = this.logger
             .child({subsystem: 'discord '})
             .set_level(config.log_level.discord_client)
+
         this.register_event_listeners(discord_logger)
 
         this.logger.info('Service instantiated')
     }
 
+    private async create<T>(classes: Class<T>[]): Promise<T[]> {
+        return Promise.all(classes.map(clazz => this.module_ref.create(clazz)))
+    }
+
     public async onModuleInit(): Promise<void> {
+        const {argument_type_classes, command_classes} = this
         const {promise, resolve} = new_promise<void>()
 
-        this.client.on('ready', () => {
+        this.commando_client.registry.registerDefaults()
+        this.commando_client.registry.registerGroups([...command_groups.entries()])
+        this.commando_client.registry.registerTypes(await this.create(argument_type_classes))
+        this.commando_client.registry.registerCommands(await this.create(command_classes))
+
+        this.commando_client.on('ready', () => {
             this.logger.info('Connected')
             resolve()
         })
-        this.client.login(this.client_token)
 
+        this.commando_client.login(this.client_token)
         await promise
+
         this.logger.info('Service initialized')
     }
 
-    public async set_activity(activity: string): Promise<void> {
-        await this.client.user?.setActivity(activity)
-    }
-
     private register_event_listeners(discord_logger: ILogger): void {
-        this.client.on('debug', message => discord_logger.debug(message))
-        this.client.on('warn', message => discord_logger.warn(message))
-        this.client.on('error', error => discord_logger.error('Error', error))
-        this.client.on('message', message => {
-            discord_logger.trace('Message received', {message})
-
-            if (this.client.user?.id !== message.author.id) {
-                this.on_message(message)
-            }
-        })
-    }
-
-    private async on_message(message: Message): Promise<void> {
-        let command, reply
-
-        try {
-            command = parse_client_command(message)
-        } catch (error) {
-            if (error instanceof UnparsableCommandError) {
-                this.logger.info('Unparsable command')
-                await message.reply("Schwätz' deutlich, Junge!")
-            } else {
-                this.logger.warn('Command parser threw an unexpected exception', {error})
-                await message.reply('Kabbudd :(')
-            }
-
-            return
-        }
-
-        try {
-            reply = await this.dispatcher.dispatch(command)
-        } catch (error) {
-            this.logger.error(`Error during command execution: ${error.message}`, {command})
-            await message.reply('Kagge, da is was schiefgelaufen :(')
-            return
-        }
-
-        await message.reply(reply)
+        this.commando_client.on('debug', message => discord_logger.debug(message))
+        this.commando_client.on('warn', message => discord_logger.warn(message))
+        this.commando_client.on('error', error => discord_logger.error('Error', error))
+        this.commando_client.on('message', message =>
+            discord_logger.trace('Message received', {message}),
+        )
     }
 }

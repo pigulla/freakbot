@@ -8,5 +8,6 @@ module.exports = {
         discord_client: 'info',
     },
     discord_client_token: '',
+    discord_user_id: '',
     sound_files_path: join(__dirname, '..', 'sounds'),
 };
