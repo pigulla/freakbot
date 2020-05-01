@@ -3,8 +3,9 @@
   "trailingComma": "all",
   "arrowParens": "avoid",
   "quoteProps": "as-needed",
+  "bracketSpacing": false,
   "semi": false,
   "useTabs": false,
-  "printWidth": 120,
+  "printWidth": 100,
   "tabWidth": 4
 }

@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common'
+import { Inject } from '@nestjs/common';
 import { Message } from 'discord.js';
 
 import { AbstractCommand, ILogger } from '../../domain';

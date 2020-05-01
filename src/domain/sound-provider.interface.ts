@@ -1,5 +1,5 @@
-import { Opaque } from 'type-fest'
 import ExtendableError from 'ts-error';
+import { Opaque } from 'type-fest'
 
 export type SoundID = Opaque<string, 'SoundID'>
 

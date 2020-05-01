@@ -1,7 +1,9 @@
-import ExtendableError from 'ts-error'
-import string_argv from 'string-argv'
-import { ClientCommand } from '../domain';
 import { Message } from 'discord.js';
+import string_argv from 'string-argv'
+import ExtendableError from 'ts-error'
+
+import { ClientCommand } from '../domain';
+
 
 const command_regex = /^!([a-zA-Z]+)\b(.*)/
 

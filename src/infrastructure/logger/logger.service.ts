@@ -1,5 +1,5 @@
-import {Logger as Pino} from 'pino'
 import {Injectable} from '@nestjs/common'
+import {Logger as Pino} from 'pino'
 
 import {ILogger, ChildLoggerOptions, LogLevel} from '../../domain'
 

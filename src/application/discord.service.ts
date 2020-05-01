@@ -1,10 +1,11 @@
-import { IDiscord } from '../domain/discord.interface';
 import { Inject } from '@nestjs/common';
-import { ILogger, ISoundProvider, SoundID } from '../domain';
 import { VoiceChannel, VoiceConnection } from 'discord.js';
 import ExtendableError from 'ts-error';
-import { new_promise } from '../util';
+
+import { ILogger, ISoundProvider, SoundID } from '../domain';
+import { IDiscord } from '../domain/discord.interface';
 import { IDiscordClient } from '../infrastructure';
+import { new_promise } from '../util';
 
 export class InvalidStateError extends ExtendableError {} 
 
@@ -36,7 +37,7 @@ export class Discord implements IDiscord {
         }
         
         this.voice_connection = await channel.join()
-        await this.discord_client.setActivity(`Nervt grad alle in ${channel.name}`)
+        await this.discord_client.set_activity(`Nervt grad alle in ${channel.name}`)
     }
     
     public async play(sound_id: SoundID): Promise<void> {

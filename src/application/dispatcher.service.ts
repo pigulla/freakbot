@@ -1,8 +1,9 @@
-import { ClientCommand, CommandHandlerMap, IDispatcher, ILogger } from '../domain';
 import { Inject } from '@nestjs/common';
 
+import { ClientCommand, CommandHandlerMap, IDispatcher, ILogger } from '../domain';
+
 export class Dispatcher implements IDispatcher {
-    private readonly handlers: CommandHandlerMap;
+    private readonly handlers: CommandHandlerMap = new Map();
 
     private readonly logger: ILogger;
 

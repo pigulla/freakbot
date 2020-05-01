@@ -1,3 +1,3 @@
 export interface IDiscordClient {
-    setActivity(activity: string): Promise<void>
+    set_activity(activity: string): Promise<void>
 }

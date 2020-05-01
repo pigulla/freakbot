@@ -1,8 +1,8 @@
 import { Inject, OnModuleInit } from '@nestjs/common'
-import { ILogger } from '../../domain'
 import read_pkg_up from 'read-pkg-up'
 import semver, { SemVer } from 'semver'
 
+import { ILogger } from '../../domain'
 import { AbstractCommand } from '../../domain'
 
 export class VersionCommand extends AbstractCommand implements OnModuleInit {

@@ -1,8 +1,9 @@
-import { basename, join } from 'path'
-import { promises as fs } from 'fs'
-import { Inject, OnModuleInit } from '@nestjs/common';
+import {promises as fs} from 'fs'
+import {basename, join} from 'path'
 
-import { ISoundProvider, Sound, SoundID, SoundNotFoundError, ILogger, Configuration } from '../domain';
+import {Inject, OnModuleInit} from '@nestjs/common'
+
+import {ISoundProvider, Sound, SoundID, SoundNotFoundError, ILogger, Configuration} from '../domain'
 
 export class SoundProvider implements ISoundProvider, OnModuleInit {
     private readonly logger: ILogger
@@ -16,20 +17,20 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.directory = config.sound_files_path
         this.logger = logger.child_for_service(SoundProvider.name)
         this.map = new Map()
-        
+
         this.logger.info('Service instantiated')
     }
-
+    
     public async onModuleInit(): Promise<void> {
         const index_file = join(this.directory, 'index.json')
         const buffer = await fs.readFile(index_file)
-        const object: { [filename: string]: string } = JSON.parse(buffer.toString())
+        const object: {[filename: string]: string} = JSON.parse(buffer.toString())
 
         this.map.clear()
 
         Object.entries(object)
-            .map(([filename, title]) => ({ filename, title, id: basename(filename) as SoundID }))
-            .forEach(({ filename, title, id }) => this.map.set(id, { title, filename, id }))
+            .map(([filename, title]) => ({filename, title, id: basename(filename) as SoundID}))
+            .forEach(({filename, title, id}) => this.map.set(id, {title, filename, id}))
 
         this.logger.info('Service initialized')
     }

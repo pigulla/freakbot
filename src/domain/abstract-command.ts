@@ -1,5 +1,6 @@
-import { ILogger } from './logger.interface'
 import { Message } from 'discord.js';
+
+import { ILogger } from './logger.interface'
 
 export abstract class AbstractCommand {
     protected readonly logger: ILogger

@@ -1,10 +1,10 @@
 import joi from '@hapi/joi'
-import pino from 'pino'
 import { Module } from '@nestjs/common'
+import pino from 'pino'
 
-import { Logger } from '../infrastructure/logger'
 import { ILogger, Configuration, configuration_schema } from '../domain'
 import { SoundProvider } from '../infrastructure';
+import { Logger } from '../infrastructure/logger'
 
 @Module({
     imports: [],

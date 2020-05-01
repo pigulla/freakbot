@@ -1,11 +1,13 @@
-import pino from 'pino';
 import { AddressInfo, Server } from 'net';
-import { Configuration, ILogger, LogLevel } from './domain';
+
 import { INestApplication, LoggerService } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import pino from 'pino';
+
+import { Configuration, ILogger, LogLevel } from './domain';
+import { Logger, adapt_for_nest } from './infrastructure/logger';
 import { AppModule } from './module';
 import { new_promise } from './util';
-import { Logger, adapt_for_nest } from './infrastructure/logger';
 
 type ShutdownFn = () => Promise<void>
 
@@ -18,8 +20,7 @@ function create_logger (log_level: LogLevel): Required<LoggerService> {
 
 async function create_app (log_level: LogLevel): Promise<INestApplication> {
     const logger = create_logger(log_level)
-    // const app = await NestFactory.create(AppModule, { logger })
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create(AppModule, { logger })
 
     app.useLogger(logger)
     app.enableShutdownHooks()
