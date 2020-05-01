@@ -39,6 +39,12 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.logger.info('Service initialized')
     }
 
+    public search(term: string): Sound[] {
+        const s = term.trim().toLowerCase()
+
+        return [...this.map.values()].filter(sound => sound.title.toLowerCase().includes(s))
+    }
+
     public exists(id: SoundID): boolean {
         return this.map.has(id)
     }

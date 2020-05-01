@@ -1,5 +1,5 @@
-import ExtendableError from 'ts-error';
-import { Opaque } from 'type-fest'
+import ExtendableError from 'ts-error'
+import {Opaque} from 'type-fest'
 
 export type SoundID = Opaque<string, 'SoundID'>
 
@@ -11,6 +11,7 @@ export interface Sound {
 
 export interface ISoundProvider {
     list(): Sound[]
+    search(term: string): Sound[]
     exists(id: SoundID): boolean
     get(id: SoundID): Sound
 }

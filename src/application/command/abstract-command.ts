@@ -3,7 +3,7 @@ import {Command, CommandoMessage, CommandoClient, CommandInfo} from 'discord.js-
 
 import {ILogger} from '../../domain'
 
-export abstract class AbstractCommand<T extends object> extends Command {
+export abstract class AbstractCommand<T> extends Command {
     protected readonly logger: ILogger
 
     public constructor(

@@ -21,8 +21,7 @@ function create_logger(log_level: LogLevel): Required<LoggerService> {
 
 async function create_app(log_level: LogLevel): Promise<INestApplication> {
     const logger = create_logger(log_level)
-    // const app = await NestFactory.create(AppModule, {logger})
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create(AppModule, {logger})
 
     app.useLogger(logger)
     app.enableShutdownHooks()
