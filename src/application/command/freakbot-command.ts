@@ -19,7 +19,7 @@ export abstract class FreakbotCommand<T = void> extends Command {
     ) {
         super(commando_client, command_info)
 
-        this.logger = logger.child_for_command_handler(Object.getPrototypeOf(this).name)
+        this.logger = logger.child_for_command(command_info.name)
     }
 
     protected abstract async do_run(msg: CommandoMessage, args: T): Promise<Message | Message[]>

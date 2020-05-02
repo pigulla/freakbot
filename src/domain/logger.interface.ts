@@ -16,7 +16,7 @@ export interface ILogger {
     set_level(level: LogLevel): this
     child(child_options: ChildLoggerOptions): ILogger
     child_for_service(name: string): ILogger
-    child_for_command_handler(name: string): ILogger
+    child_for_command(name: string): ILogger
 
     fatal(message: string, object?: object): void
     error(message: string, object?: object): void

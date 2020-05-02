@@ -24,8 +24,8 @@ export class Logger implements ILogger {
         return this.child({service: name})
     }
 
-    public child_for_command_handler(name: string): ILogger {
-        return this.child({command_handler: name})
+    public child_for_command(name: string): ILogger {
+        return this.child({command: name})
     }
 
     public fatal(message: string, object: object = {}): void {
