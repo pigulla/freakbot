@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common'
+import {Module} from '@nestjs/common'
 
-import { DiscordModule } from './discord.module';
+import {DiscordModule} from './discord.module'
 
 @Module({
     imports: [DiscordModule],

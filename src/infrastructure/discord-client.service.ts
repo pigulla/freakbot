@@ -3,7 +3,7 @@ import {ModuleRef} from '@nestjs/core'
 import {CommandoClient, Command, ArgumentType} from 'discord.js-commando'
 import {Class} from 'type-fest'
 
-import {AbstractCommand} from '../application/command/abstract-command'
+import {FreakbotCommand} from '../application/command/freakbot-command'
 import {ILogger, Configuration, command_groups} from '../domain'
 import {new_promise} from '../util'
 
@@ -18,7 +18,7 @@ export class DiscordClient implements OnModuleInit {
 
     public constructor(
         @Inject('CommandoClient') commando_client: CommandoClient,
-        @Inject('Commands') command_classes: Class<AbstractCommand<any>>[],
+        @Inject('Commands') command_classes: Class<FreakbotCommand<any>>[],
         @Inject('CustomArgumentTypes') argument_type_classes: Class<ArgumentType>[],
         @Inject('Configuration') config: Configuration,
         @Inject('ILogger') logger: ILogger,

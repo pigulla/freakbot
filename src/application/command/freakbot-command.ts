@@ -1,9 +1,15 @@
-import {Message} from 'discord.js'
-import {Command, CommandoMessage, CommandoClient, CommandInfo} from 'discord.js-commando'
+import {Message, VoiceConnection} from 'discord.js'
+import {
+    Command,
+    CommandoMessage,
+    CommandoClient,
+    CommandInfo,
+    FriendlyError,
+} from 'discord.js-commando'
 
 import {ILogger} from '../../domain'
 
-export abstract class AbstractCommand<T> extends Command {
+export abstract class FreakbotCommand<T = void> extends Command {
     protected readonly logger: ILogger
 
     public constructor(
@@ -20,5 +26,15 @@ export abstract class AbstractCommand<T> extends Command {
 
     public async run(msg: CommandoMessage, args: unknown): Promise<Message | Message[]> {
         return this.do_run(msg, args as T)
+    }
+
+    protected get_voice_connection(): VoiceConnection {
+        const voice_connections = this.client.voice?.connections.array()
+
+        if (!voice_connections || voice_connections.length === 0) {
+            throw new FriendlyError('You must invite the bot to a voice channel first')
+        }
+
+        return voice_connections[0]
     }
 }

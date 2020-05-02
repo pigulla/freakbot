@@ -1,6 +1,6 @@
-import joi from '@hapi/joi';
+import joi from '@hapi/joi'
 
-import { LogLevel } from './logger.interface';
+import {LogLevel} from './logger.interface'
 
 export interface Configuration {
     readonly server_hostname: string
@@ -26,10 +26,13 @@ const log_level = joi
 export const configuration_schema = joi.object().keys({
     server_hostname: joi.string().min(1).required(),
     server_port: joi.number().port().required(),
-    log_level: joi.object().keys({
-        application: log_level,
-        discord_client: log_level,
-    }).required(),
+    log_level: joi
+        .object()
+        .keys({
+            application: log_level,
+            discord_client: log_level,
+        })
+        .required(),
     discord_client_token: joi.string().min(1).required(),
     discord_user_id: joi.string().min(1).required(),
     sound_files_path: joi.string().min(1).required(),

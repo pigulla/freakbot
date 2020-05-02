@@ -1,12 +1,12 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
-import {CommandoMessage, CommandoClient, FriendlyError} from 'discord.js-commando'
+import {CommandoMessage, CommandoClient} from 'discord.js-commando'
 
 import {CommandGroup, ILogger, ISoundProvider} from '../../domain'
 
-import {AbstractCommand} from './abstract-command'
+import {FreakbotCommand} from './freakbot-command'
 
-export class SearchCommand extends AbstractCommand<string> {
+export class SearchCommand extends FreakbotCommand<string> {
     private readonly sound_provider: ISoundProvider
 
     public constructor(
@@ -35,19 +35,14 @@ export class SearchCommand extends AbstractCommand<string> {
     }
 
     protected async do_run(msg: CommandoMessage, term: string): Promise<Message | Message[]> {
-        const MAX = 10
-
-        if (term.trim().length < 3) {
-            throw new FriendlyError('Please enter at least three characters')
-        }
-
+        const max_results = 10
         const sounds = this.sound_provider.search(term)
 
         if (sounds.length === 0) {
             return msg.reply('Sorry, that search did not return anything')
         }
 
-        const extra = Math.max(sounds.length - MAX, 0)
+        const extra = Math.max(sounds.length - max_results, 0)
         const header = [`Found ${sounds.length} match${sounds.length === 1 ? '' : 'es'}`]
         const and_more = extra > 0 ? [`...and ${extra} more`] : []
 
@@ -57,7 +52,7 @@ export class SearchCommand extends AbstractCommand<string> {
                 ...sounds
                     .sort((a, b) => a.id.localeCompare(b.id))
                     .map(({title, id}) => `${id} - ${title}`)
-                    .slice(0, MAX),
+                    .slice(0, max_results),
                 ...and_more,
             ],
             {

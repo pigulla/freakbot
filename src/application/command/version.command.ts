@@ -5,11 +5,9 @@ import {NormalizedPackageJson} from 'read-pkg-up'
 
 import {CommandGroup, ILogger} from '../../domain'
 
-import {AbstractCommand} from './abstract-command'
+import {FreakbotCommand} from './freakbot-command'
 
-type Args = {}
-
-export class VersionCommand extends AbstractCommand<Args> {
+export class VersionCommand extends FreakbotCommand {
     private readonly package_json: NormalizedPackageJson
 
     public constructor(
@@ -34,7 +32,7 @@ export class VersionCommand extends AbstractCommand<Args> {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage, _args: Args): Promise<Message | Message[]> {
+    protected async do_run(msg: CommandoMessage): Promise<Message | Message[]> {
         return msg.reply(`3 x 14 is 38 und 12 das gibt ${this.package_json.version}...`)
     }
 }

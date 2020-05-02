@@ -4,11 +4,9 @@ import {CommandoMessage, CommandoClient, FriendlyError} from 'discord.js-command
 
 import {CommandGroup, ILogger} from '../../domain'
 
-import {AbstractCommand} from './abstract-command'
+import {FreakbotCommand} from './freakbot-command'
 
-type Args = {}
-
-export class FollowCommand extends AbstractCommand<Args> {
+export class FollowCommand extends FreakbotCommand {
     public constructor(
         @Inject('CommandoClient') commando_client: CommandoClient,
         @Inject('ILogger') logger: ILogger,
@@ -29,7 +27,7 @@ export class FollowCommand extends AbstractCommand<Args> {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage, _args: Args): Promise<Message | Message[]> {
+    protected async do_run(msg: CommandoMessage): Promise<Message | Message[]> {
         const voice_channel = msg.member.voice.channel
 
         if (!voice_channel) {

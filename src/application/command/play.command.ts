@@ -1,16 +1,16 @@
 import {Inject} from '@nestjs/common'
-import {Message, VoiceConnection} from 'discord.js'
-import {CommandoMessage, CommandoClient, FriendlyError} from 'discord.js-commando'
+import {Message} from 'discord.js'
+import {CommandoMessage, CommandoClient} from 'discord.js-commando'
 
 import {CommandGroup, CustomArgumentType, ILogger, ISoundProvider, SoundID} from '../../domain'
 
-import {AbstractCommand} from './abstract-command'
+import {FreakbotCommand} from './freakbot-command'
 
 type Args = {
     sound_id: SoundID
 }
 
-export class PlayCommand extends AbstractCommand<Args> {
+export class PlayCommand extends FreakbotCommand<Args> {
     private readonly sound_provider: ISoundProvider
 
     public constructor(
@@ -47,19 +47,8 @@ export class PlayCommand extends AbstractCommand<Args> {
 
     protected async do_run(msg: CommandoMessage, args: Args): Promise<Message | Message[]> {
         const sound = this.sound_provider.get(args.sound_id)
-        const voice_connection = this.get_voice_connection()
 
-        await voice_connection.play(sound.filename)
+        await this.get_voice_connection().play(sound.filename)
         return msg.reply(sound.title)
-    }
-
-    private get_voice_connection(): VoiceConnection {
-        const voice_connections = this.client.voice?.connections.array()
-
-        if (!voice_connections || voice_connections.length === 0) {
-            throw new FriendlyError('You must invite the bot to a voice channel first')
-        }
-
-        return voice_connections[0]
     }
 }
