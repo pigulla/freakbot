@@ -1,0 +1,105 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "tsconfig.json",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint/eslint-plugin"
+    ],
+    "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors",
+        "plugin:import/typescript",
+        "prettier",
+        "prettier/@typescript-eslint"
+    ],
+    "root": true,
+    "env": {
+        "node": true
+    },
+    "rules": {
+        "max-len": [
+            "error",
+            {
+                "code": 100
+            }
+        ],
+        "import/default": "off",
+        "import/order": ["error", {
+           "newlines-between":"always",
+            "alphabetize": {
+                "order": "asc",
+                "caseInsensitive": true
+            }
+        }],
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/explicit-member-accessibility": ["error", {
+            "accessibility": "explicit"
+        }],
+        "@typescript-eslint/naming-convention": [
+            "warn",
+            {
+                "selector": "default",
+                "format": [
+                    "snake_case"
+                ],
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid"
+            },
+            {
+                "selector": "typeLike",
+                "format": [
+                    "PascalCase"
+                ],
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid"
+            },
+            {
+                "selector": "property",
+                "format": null,
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid"
+            },
+            {
+                "selector": "parameter",
+                "format": ["snake_case"],
+                "leadingUnderscore": "allow",
+                "trailingUnderscore": "forbid"
+            },
+            {
+                "selector": "method",
+                "format": null,
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid",
+                "filter": {
+                    "regex": "^(onModuleInit|useFactory)$",
+                    "match": true
+                }
+            },
+            {
+                "selector": "method",
+                "format": ["snake_case"],
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid",
+                "filter": {
+                    "regex": "^(onModuleInit|useFactory)$",
+                    "match": false
+                }
+            },
+            {
+                "selector": "enumMember",
+                "format": [
+                    "UPPER_CASE"
+                ],
+                "leadingUnderscore": "forbid",
+                "trailingUnderscore": "forbid"
+            }
+        ]
+    }
+}
