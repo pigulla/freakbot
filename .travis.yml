@@ -6,11 +6,12 @@ branches:
     - feature/travisci
 node_js:
   - "14"
-  - "13"
-  - "12"
-  - "11"
-  - "10"
+#  - "13"
+#  - "12"
+#  - "11"
+#  - "10"
 before_install:
   - sudo apt-get update
   - sudo apt-get -y install ffmpeg
-install: npm install --unsafe-perm
+  - sudo npm install --global node-pre-gyp
+install: npm install
