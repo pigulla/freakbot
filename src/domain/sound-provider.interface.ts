@@ -1,10 +1,7 @@
 import ExtendableError from 'ts-error'
-import {Opaque} from 'type-fest'
-
-export type SoundID = Opaque<string, 'SoundID'>
 
 export interface Sound {
-    id: SoundID
+    id: number
     title: string
     filename: string
 }
@@ -12,8 +9,8 @@ export interface Sound {
 export interface ISoundProvider {
     list(): Sound[]
     search(term: string): Sound[]
-    exists(id: SoundID): boolean
-    get(id: SoundID): Sound
+    exists(id: number): boolean
+    get(id: number): Sound
 }
 
 export class SoundNotFoundError extends ExtendableError {}

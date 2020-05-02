@@ -2,12 +2,12 @@ import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
 import {CommandoMessage, CommandoClient} from 'discord.js-commando'
 
-import {CommandGroup, CustomArgumentType, ILogger, ISoundProvider, SoundID} from '../../domain'
+import {CommandGroup, CustomArgumentType, ILogger, ISoundProvider} from '../../domain'
 
 import {FreakbotCommand} from './freakbot-command'
 
 type Args = {
-    sound_id: SoundID
+    sound_id: number
 }
 
 export class PlayCommand extends FreakbotCommand<Args> {

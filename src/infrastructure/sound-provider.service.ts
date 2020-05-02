@@ -1,20 +1,24 @@
-import {promises as fs} from 'fs'
-import {basename, join} from 'path'
+import {join} from 'path'
 
 import {Inject, OnModuleInit} from '@nestjs/common'
 
-import {ISoundProvider, Sound, SoundID, SoundNotFoundError, ILogger, Configuration} from '../domain'
+import {ISoundProvider, Sound, SoundNotFoundError, ILogger, Configuration} from '../domain'
+
+import {parse_lua_data_file} from './parse-lua-data-file'
 
 export class SoundProvider implements ISoundProvider, OnModuleInit {
     private readonly logger: ILogger
-    private readonly directory: string
-    private readonly map: Map<SoundID, Sound>
+    private readonly sounds_directory: string
+    private readonly data_file: string
+    private readonly map: Map<number, Sound>
 
     public constructor(
         @Inject('Configuration') config: Configuration,
         @Inject('ILogger') logger: ILogger,
     ) {
-        this.directory = config.sound_files_path
+        this.sounds_directory = join(config.voicepack_path, 'sounds')
+        this.data_file = join(config.voicepack_path, 'Data.lua')
+
         this.logger = logger.child_for_service(SoundProvider.name)
         this.map = new Map()
 
@@ -22,19 +26,16 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
     }
 
     public async onModuleInit(): Promise<void> {
-        const index_file = join(this.directory, 'index.json')
-        const buffer = await fs.readFile(index_file)
-        const object: {[filename: string]: string} = JSON.parse(buffer.toString())
-
+        const sound_map = await parse_lua_data_file(this.data_file)
         this.map.clear()
 
-        Object.entries(object)
-            .map(([filename, title]) => ({
-                filename: join(this.directory, filename),
+        for (const [id, title] of sound_map) {
+            this.map.set(id, {
+                id,
                 title,
-                id: basename(filename) as SoundID,
-            }))
-            .forEach(({filename, title, id}) => this.map.set(id, {title, filename, id}))
+                filename: join(this.sounds_directory, `fff${String(id).padStart(3, '0')}.mp3`),
+            })
+        }
 
         this.logger.info('Service initialized')
     }
@@ -45,7 +46,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         return [...this.map.values()].filter(sound => sound.title.toLowerCase().includes(s))
     }
 
-    public exists(id: SoundID): boolean {
+    public exists(id: number): boolean {
         return this.map.has(id)
     }
 
@@ -53,7 +54,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         return [...this.map.values()]
     }
 
-    public get(id: SoundID): Sound {
+    public get(id: number): Sound {
         const sound = this.map.get(id)
 
         if (!sound) {

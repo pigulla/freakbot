@@ -1,7 +1,7 @@
 import {Inject} from '@nestjs/common'
 import {ArgumentType, CommandoClient} from 'discord.js-commando'
 
-import {CustomArgumentType, ISoundProvider, SoundID} from '../../domain'
+import {CustomArgumentType, ISoundProvider} from '../../domain'
 
 export class SoundType extends ArgumentType {
     private readonly sound_provider: ISoundProvider
@@ -16,10 +16,10 @@ export class SoundType extends ArgumentType {
     }
 
     public validate(value: string) {
-        return this.sound_provider.exists(value as SoundID)
+        return /^\d+$/.test(value) && this.sound_provider.exists(parseInt(value, 10))
     }
 
-    public parse(value: string): SoundID {
-        return value as SoundID
+    public parse(value: string): number {
+        return parseInt(value, 10)
     }
 }

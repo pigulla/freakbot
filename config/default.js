@@ -1,4 +1,4 @@
-const join = require('path').join;
+const join = require('path').join
 
 module.exports = {
     server_hostname: 'localhost',
@@ -9,5 +9,5 @@ module.exports = {
     },
     discord_client_token: '',
     discord_user_id: '',
-    sound_files_path: join(__dirname, '..', 'sounds'),
-};
+    voicepack_path: join(__dirname, '..', '..', 'FFFVoicePack'),
+}

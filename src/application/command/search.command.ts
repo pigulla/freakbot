@@ -50,7 +50,7 @@ export class SearchCommand extends FreakbotCommand<string> {
             [
                 ...header,
                 ...sounds
-                    .sort((a, b) => a.id.localeCompare(b.id))
+                    .sort((a, b) => a.id - b.id)
                     .map(({title, id}) => `${id} - ${title}`)
                     .slice(0, max_results),
                 ...and_more,
