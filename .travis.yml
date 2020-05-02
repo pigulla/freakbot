@@ -12,5 +12,5 @@ node_js:
 #  - "10"
 before_install:
   - sudo apt-get update
-  - sudo apt-get -y install ffmpeg python
+  - sudo apt-get -y install ffmpeg build-essential
 install: npm install
