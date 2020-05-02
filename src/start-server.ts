@@ -3,7 +3,7 @@ import {NestFactory} from '@nestjs/core'
 import pino from 'pino'
 import {NormalizedPackageJson} from 'read-pkg-up'
 
-import {Configuration, ILogger, LogLevel} from './domain'
+import {Configuration, ILogger, ISoundProvider, LogLevel} from './domain'
 import {Logger, adapt_for_nest} from './infrastructure/logger'
 import {AppModule} from './module'
 
@@ -29,8 +29,10 @@ export async function start_application(): Promise<INestApplicationContext> {
     const logger = app.get<ILogger>('ILogger')
     const config = app.get<Configuration>('Configuration')
     const package_json = app.get<NormalizedPackageJson>('package.json')
+    const sound_provider = app.get<ISoundProvider>('ISoundProvider')
 
     logger.info(`Application started (v${package_json.version})`, config)
+    logger.debug(`Sounds available: ${sound_provider.size}`)
 
     return app
 }

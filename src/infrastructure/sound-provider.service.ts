@@ -40,6 +40,10 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.logger.info('Service initialized')
     }
 
+    public get size(): number {
+        return this.map.size
+    }
+
     public search(term: string): Sound[] {
         const s = term.trim().toLowerCase()
 
