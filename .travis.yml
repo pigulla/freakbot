@@ -3,6 +3,7 @@ branches:
   only:
     - master
     - develop
+    - feature/travisci
 node_js:
   - "14"
   - "13"
