@@ -5,10 +5,10 @@ import * as types from '../application/types'
 import {DiscordClient} from '../infrastructure'
 
 import {InfrastructureModule} from './infrastructure.module'
-import {UtilModule} from './util.module'
+import {UtilityModule} from './utility.module'
 
 @Module({
-    imports: [UtilModule, InfrastructureModule],
+    imports: [UtilityModule, InfrastructureModule],
     controllers: [],
     providers: [
         {

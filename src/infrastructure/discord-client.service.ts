@@ -24,7 +24,7 @@ export class DiscordClient implements OnModuleInit {
         @Inject('ILogger') logger: ILogger,
         module_ref: ModuleRef,
     ) {
-        this.logger = logger.child_for_service(DiscordClient.name)
+        this.logger = logger.child_for_service(this)
         this.commando_client = commando_client
         this.client_token = config.discord_client_token
         this.command_classes = command_classes

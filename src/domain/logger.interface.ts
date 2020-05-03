@@ -1,3 +1,5 @@
+import {FreakbotCommand} from '../application/command/freakbot-command'
+
 export type ChildLoggerOptions = {
     level?: LogLevel
     [key: string]: any
@@ -15,8 +17,9 @@ export enum LogLevel {
 export interface ILogger {
     set_level(level: LogLevel): this
     child(child_options: ChildLoggerOptions): ILogger
-    child_for_service(name: string): ILogger
-    child_for_command(name: string): ILogger
+    child_for_service(service: object): ILogger
+    child_for_command(command: FreakbotCommand<any>): ILogger
+    child_for_controller(controller: object): ILogger
 
     fatal(message: string, object?: object): void
     error(message: string, object?: object): void

@@ -19,7 +19,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.sounds_directory = join(config.voicepack_path, 'sounds')
         this.data_file = join(config.voicepack_path, 'Data.lua')
 
-        this.logger = logger.child_for_service(SoundProvider.name)
+        this.logger = logger.child_for_service(this)
         this.map = new Map()
 
         this.logger.info('Service instantiated')

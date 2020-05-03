@@ -4,10 +4,10 @@ import {CommandoClient} from 'discord.js-commando'
 
 import {SoundProvider} from '../infrastructure'
 
-import {UtilModule} from './util.module'
+import {UtilityModule} from './utility.module'
 
 @Module({
-    imports: [UtilModule],
+    imports: [UtilityModule],
     controllers: [],
     providers: [
         {
