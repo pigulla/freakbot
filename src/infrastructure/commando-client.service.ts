@@ -1,15 +1,15 @@
 import {Inject, Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common'
 import {ModuleRef} from '@nestjs/core'
-import {CommandoClient, Command, ArgumentType} from 'discord.js-commando'
+import {CommandoClient as DiscordClient, Command, ArgumentType} from 'discord.js-commando'
 import {Class} from 'type-fest'
 
-import {FreakbotCommand} from '../application/command/freakbot-command'
-import {ILogger, Configuration, command_groups} from '../domain'
+import {FreakbotCommand} from '../application/command/freakbot.abstract-command'
+import {ILogger, ICommandoClient, Configuration, command_groups} from '../domain'
 import {new_promise} from '../util'
 
 @Injectable()
-export class DiscordClient implements OnModuleInit, OnModuleDestroy {
-    private readonly commando_client: CommandoClient
+export class CommandoClient implements OnModuleInit, OnModuleDestroy, ICommandoClient {
+    private readonly commando_client: DiscordClient
     private readonly client_token: string
     private readonly logger: ILogger
     private readonly command_classes: Class<Command>[]
@@ -17,9 +17,9 @@ export class DiscordClient implements OnModuleInit, OnModuleDestroy {
     private readonly module_ref: ModuleRef
 
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
-        @Inject('Commands') command_classes: Class<FreakbotCommand<any>>[],
-        @Inject('CustomArgumentTypes') argument_type_classes: Class<ArgumentType>[],
+        @Inject('client-instance') commando_client: DiscordClient,
+        @Inject('commands') command_classes: Class<FreakbotCommand<any>>[],
+        @Inject('custom-argument-types') argument_type_classes: Class<ArgumentType>[],
         @Inject('Configuration') config: Configuration,
         @Inject('ILogger') logger: ILogger,
         module_ref: ModuleRef,
@@ -31,13 +31,11 @@ export class DiscordClient implements OnModuleInit, OnModuleDestroy {
         this.argument_type_classes = argument_type_classes
         this.module_ref = module_ref
 
-        const discord_logger = logger
-            .child({subsystem: 'discord '})
-            .set_level(config.log_level.discord_client)
+        this.logger.debug('Service instantiated')
+    }
 
-        this.register_event_listeners(discord_logger)
-
-        this.logger.info('Service instantiated')
+    public get_client(): DiscordClient {
+        return this.commando_client
     }
 
     private async create<T>(classes: Class<T>[]): Promise<T[]> {
@@ -61,21 +59,12 @@ export class DiscordClient implements OnModuleInit, OnModuleDestroy {
         await this.commando_client.login(this.client_token)
         await promise
 
-        this.logger.info('Service initialized')
+        this.logger.debug('Service initialized')
     }
 
     public async onModuleDestroy(): Promise<void> {
         this.commando_client.destroy()
 
-        this.logger.info('Service destroyed')
-    }
-
-    private register_event_listeners(discord_logger: ILogger): void {
-        this.commando_client.on('debug', message => discord_logger.debug(message))
-        this.commando_client.on('warn', message => discord_logger.warn(message))
-        this.commando_client.on('error', error => discord_logger.error(error.message, error))
-        this.commando_client.on('message', message =>
-            discord_logger.trace('Message received', {message}),
-        )
+        this.logger.debug('Service destroyed')
     }
 }

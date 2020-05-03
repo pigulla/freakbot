@@ -1,9 +1,8 @@
 FROM node:14-buster
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG NPM_PACKAGES=/app/npm
+ARG NPM_PACKAGES=/app/.npm
 
-ENV NODE_ENV 'docker'
 ENV HOME '/app'
 ENV VOICEPACK_PATH '/app/FFFVoicePack'
 ENV HOSTNAME '0.0.0.0'

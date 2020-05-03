@@ -1,27 +1,27 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
-import {CommandoMessage, CommandoClient} from 'discord.js-commando'
+import {CommandoMessage} from 'discord.js-commando'
 
-import {CommandGroup, ILogger, ISoundProvider} from '../../domain'
+import {CommandGroup, ICommandoClient, ILogger, ISoundProvider} from '../../domain'
 
-import {FreakbotCommand} from './freakbot-command'
+import {FreakbotCommand} from './freakbot.abstract-command'
 
 export class SearchCommand extends FreakbotCommand<string> {
     private readonly sound_provider: ISoundProvider
 
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('ICommandoClient') commando_client: ICommandoClient,
         @Inject('ISoundProvider') sound_provider: ISoundProvider,
         @Inject('ILogger') logger: ILogger,
     ) {
         super(
-            commando_client,
+            commando_client.get_client(),
             {
                 name: 'search',
-                aliases: [],
+                aliases: ['s'],
                 group: CommandGroup.SOUND,
                 memberName: 'search',
-                description: 'Searches for a sound.',
+                description: 'Search for a sound.',
                 guildOnly: true,
                 examples: ['search kaffee'],
                 argsType: 'single',

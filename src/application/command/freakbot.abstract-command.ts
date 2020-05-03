@@ -53,6 +53,21 @@ export abstract class FreakbotCommand<T = void> extends Command {
         }
     }
 
+    protected async assert_author_is_in_voice_channel(message: Message): Promise<void> {
+        const voice_connection = await this.get_voice_connection()
+        const is_in_channel = voice_connection.channel.members.some(
+            member => member.user === message.author,
+        )
+
+        if (is_in_channel) {
+            return
+        }
+
+        throw new FriendlyError(
+            'You must be in the same voice channel as the Freakbot to use this command.',
+        )
+    }
+
     protected get_voice_connection(): VoiceConnection {
         const voice_connections = this.client.voice?.connections.array()
 

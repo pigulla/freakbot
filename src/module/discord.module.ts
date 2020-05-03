@@ -2,7 +2,8 @@ import {Module} from '@nestjs/common'
 
 import * as commands from '../application/command'
 import * as types from '../application/types'
-import {DiscordClient} from '../infrastructure'
+import {DiscordHandler} from '../handler'
+import {CommandoClient} from '../infrastructure'
 
 import {InfrastructureModule} from './infrastructure.module'
 import {UtilityModule} from './utility.module'
@@ -12,14 +13,19 @@ import {UtilityModule} from './utility.module'
     controllers: [],
     providers: [
         {
-            provide: 'Commands',
+            provide: 'commands',
             useValue: Object.values(commands),
         },
         {
-            provide: 'CustomArgumentTypes',
+            provide: 'custom-argument-types',
             useValue: Object.values(types),
         },
-        DiscordClient,
+        {
+            provide: 'ICommandoClient',
+            useClass: CommandoClient,
+        },
+
+        DiscordHandler,
     ],
     exports: [],
 })

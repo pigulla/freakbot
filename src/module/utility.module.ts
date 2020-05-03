@@ -1,24 +1,32 @@
 import joi from '@hapi/joi'
 import {Module} from '@nestjs/common'
-import pino from 'pino'
+import {Logger as PinoLogger} from 'pino'
 import read_pkg, {NormalizedPackageJson} from 'read-pkg-up'
 
+import {Uptime} from '../application'
 import {ILogger, Configuration, configuration_schema} from '../domain'
 import {Logger} from '../infrastructure/logger'
+import {get_root_logger} from '../root-logger'
 
 @Module({
     imports: [],
     controllers: [],
     providers: [
         {
-            provide: 'configuration',
+            provide: 'root-logger',
+            useFactory(): PinoLogger {
+                return get_root_logger()
+            },
+        },
+        {
+            provide: 'configuration-object',
             useFactory(): unknown {
                 return require('config').util.toObject()
             },
         },
         {
             provide: 'Configuration',
-            inject: ['configuration'],
+            inject: ['configuration-object'],
             useFactory(configuration: unknown): Configuration {
                 return joi.attempt(configuration, configuration_schema)
             },
@@ -37,13 +45,16 @@ import {Logger} from '../infrastructure/logger'
         },
         {
             provide: 'ILogger',
-            inject: ['Configuration'],
-            useFactory(configuration: Configuration): ILogger {
-                const root_logger = pino({prettyPrint: true, redact: ['discord_client_token']})
+            inject: ['Configuration', 'root-logger'],
+            useFactory(configuration: Configuration, root_logger: PinoLogger): ILogger {
                 return new Logger(root_logger).set_level(configuration.log_level.application)
             },
         },
+        {
+            provide: 'IUptime',
+            useClass: Uptime,
+        },
     ],
-    exports: ['Configuration', 'ILogger', 'package.json'],
+    exports: ['Configuration', 'ILogger', 'IUptime', 'package.json'],
 })
 export class UtilityModule {}

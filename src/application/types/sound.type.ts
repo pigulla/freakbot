@@ -1,16 +1,16 @@
 import {Inject} from '@nestjs/common'
-import {ArgumentType, CommandoClient} from 'discord.js-commando'
+import {ArgumentType} from 'discord.js-commando'
 
-import {CustomArgumentType, ISoundProvider} from '../../domain'
+import {CustomArgumentType, ICommandoClient, ISoundProvider} from '../../domain'
 
 export class SoundType extends ArgumentType {
     private readonly sound_provider: ISoundProvider
 
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('ICommandoClient') commando_client: ICommandoClient,
         @Inject('ISoundProvider') sound_provider: ISoundProvider,
     ) {
-        super(commando_client, CustomArgumentType.SOUND)
+        super(commando_client.get_client(), CustomArgumentType.SOUND)
 
         this.sound_provider = sound_provider
     }

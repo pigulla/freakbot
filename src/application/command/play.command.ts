@@ -1,31 +1,35 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
-import {CommandoMessage, CommandoClient} from 'discord.js-commando'
+import {CommandoMessage} from 'discord.js-commando'
 
-import {CommandGroup, CustomArgumentType, ILogger, ISoundProvider} from '../../domain'
+import {
+    CommandGroup,
+    CustomArgumentType,
+    ICommandoClient,
+    ILogger,
+    ISoundProvider,
+} from '../../domain'
 
-import {FreakbotCommand} from './freakbot-command'
+import {FreakbotSoundCommand} from './freakbot.sound-command'
 
 type Args = {
     sound_id: number
 }
 
-export class PlayCommand extends FreakbotCommand<Args> {
-    private readonly sound_provider: ISoundProvider
-
+export class PlayCommand extends FreakbotSoundCommand<Args> {
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('ICommandoClient') commando_client: ICommandoClient,
         @Inject('ISoundProvider') sound_provider: ISoundProvider,
         @Inject('ILogger') logger: ILogger,
     ) {
         super(
-            commando_client,
+            commando_client.get_client(),
             {
                 name: 'play',
-                aliases: [],
+                aliases: ['p'],
                 group: CommandGroup.SOUND,
                 memberName: 'play',
-                description: 'Plays a sound.',
+                description: 'Play a sound.',
                 guildOnly: true,
                 examples: ['play fff101_01.mp3'],
                 args: [
@@ -37,10 +41,9 @@ export class PlayCommand extends FreakbotCommand<Args> {
                     },
                 ],
             },
+            sound_provider,
             logger,
         )
-
-        this.sound_provider = sound_provider
 
         this.logger.debug('Service instantiated')
     }
@@ -48,7 +51,7 @@ export class PlayCommand extends FreakbotCommand<Args> {
     protected async do_run(message: CommandoMessage, args: Args): Promise<Message | Message[]> {
         const sound = this.sound_provider.get(args.sound_id)
 
-        await this.get_voice_connection().play(sound.filename)
+        await this.play_sound(message.author, sound)
         return message.reply(sound.title)
     }
 }

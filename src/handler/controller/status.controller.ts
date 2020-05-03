@@ -1,12 +1,15 @@
 import {Controller, Inject, Get} from '@nestjs/common'
+import {Dayjs} from 'dayjs'
 import {NormalizedPackageJson} from 'read-pkg-up'
 import simplegit, {SimpleGit} from 'simple-git/promise'
 
 import {Configuration, ILogger} from '../../domain'
+import {IUptime} from '../../domain/uptime.interface'
 
 export type StatusDTO = {
     application_version: string
     voicepack_revision: string | null
+    started_at: Dayjs
 }
 
 @Controller()
@@ -14,15 +17,18 @@ export class StatusController {
     private readonly logger: ILogger
     private readonly package_json: NormalizedPackageJson
     private readonly git: SimpleGit
+    private readonly uptime: IUptime
 
     public constructor(
         @Inject('ILogger') logger: ILogger,
+        @Inject('IUptime') uptime: IUptime,
         @Inject('Configuration') config: Configuration,
         @Inject('package.json') package_json: NormalizedPackageJson,
     ) {
         this.logger = logger.child_for_controller(this)
         this.package_json = package_json
         this.git = simplegit(config.voicepack_path)
+        this.uptime = uptime
 
         this.logger.info('Controller instantiated')
     }
@@ -32,6 +38,7 @@ export class StatusController {
         return {
             application_version: this.package_json.version,
             voicepack_revision: await this.get_voicepack_revision(),
+            started_at: this.uptime.get_started_at(),
         }
     }
 
