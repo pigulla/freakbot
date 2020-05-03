@@ -5,7 +5,7 @@ import {NestFactory} from '@nestjs/core'
 import pino from 'pino'
 import {NormalizedPackageJson} from 'read-pkg-up'
 
-import {Configuration, ILogger, ISoundProvider, LogLevel} from './domain'
+import {Configuration, ILogger, LogLevel} from './domain'
 import {Logger, adapt_for_nest} from './infrastructure/logger'
 import {AppModule} from './module'
 import {new_promise} from './util'
@@ -37,21 +37,13 @@ export async function start_server(): Promise<ShutdownFn> {
     const logger = app.get<ILogger>('ILogger')
     const config = app.get<Configuration>('Configuration')
     const package_json = app.get<NormalizedPackageJson>('package.json')
-    const sound_provider = app.get<ISoundProvider>('ISoundProvider')
     const server = app.getHttpServer() as Server
 
-    server.once('listening', function () {
-        const {port, address} = server.address() as AddressInfo
+    await app.listenAsync(config.server_port, config.server_hostname)
+    const {port, address} = server.address() as AddressInfo
 
-        logger.info(
-            `Application listening on ${address}:${port} (v${package_json.version})`,
-            config,
-        )
-        logger.debug(`Sounds available: ${sound_provider.size}`)
-        resolve(() => app.close())
-    })
-
-    await app.listen(config.server_port, config.server_hostname)
+    logger.info(`Application listening on ${address}:${port} (v${package_json.version})`, config)
+    resolve(() => app.close())
 
     return promise
 }

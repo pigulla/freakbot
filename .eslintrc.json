@@ -78,7 +78,7 @@
                 "leadingUnderscore": "forbid",
                 "trailingUnderscore": "forbid",
                 "filter": {
-                    "regex": "^(onModuleInit|useFactory)$",
+                    "regex": "^(onModuleInit|onModuleDestroy|onApplicationBootstrap|onApplicationShutdown|useFactory)$",
                     "match": true
                 }
             },

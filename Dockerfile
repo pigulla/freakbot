@@ -3,8 +3,10 @@ FROM node:14
 ARG DEBIAN_FRONTEND=noninteractive
 ARG NPM_PACKAGES=/app/npm
 
-ENV HOME=/app
+ENV NODE_ENV 'docker'
+ENV HOME '/app'
 ENV VOICEPACK_PATH '/app/FFFVoicePack'
+ENV HOSTNAME '0.0.0.0'
 
 USER root
 RUN groupadd --system freakbot && useradd --no-log-init --system --gid freakbot freakbot

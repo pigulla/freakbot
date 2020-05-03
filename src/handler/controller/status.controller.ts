@@ -28,7 +28,7 @@ export class StatusController {
     }
 
     @Get('/status')
-    public async getStatus(): Promise<StatusDTO> {
+    public async get_status(): Promise<StatusDTO> {
         return {
             application_version: this.package_json.version,
             voicepack_revision: await this.get_voicepack_revision(),

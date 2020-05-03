@@ -1,4 +1,4 @@
-import {Inject, Injectable, OnModuleInit} from '@nestjs/common'
+import {Inject, Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common'
 import {ModuleRef} from '@nestjs/core'
 import {CommandoClient, Command, ArgumentType} from 'discord.js-commando'
 import {Class} from 'type-fest'
@@ -8,7 +8,7 @@ import {ILogger, Configuration, command_groups} from '../domain'
 import {new_promise} from '../util'
 
 @Injectable()
-export class DiscordClient implements OnModuleInit {
+export class DiscordClient implements OnModuleInit, OnModuleDestroy {
     private readonly commando_client: CommandoClient
     private readonly client_token: string
     private readonly logger: ILogger
@@ -54,14 +54,20 @@ export class DiscordClient implements OnModuleInit {
         this.commando_client.registry.registerCommands(await this.create(command_classes))
 
         this.commando_client.on('ready', () => {
-            this.logger.info('Connected')
+            this.logger.info('Client is ready')
             resolve()
         })
 
-        this.commando_client.login(this.client_token)
+        await this.commando_client.login(this.client_token)
         await promise
 
         this.logger.info('Service initialized')
+    }
+
+    public async onModuleDestroy(): Promise<void> {
+        this.commando_client.destroy()
+
+        this.logger.info('Service destroyed')
     }
 
     private register_event_listeners(discord_logger: ILogger): void {
