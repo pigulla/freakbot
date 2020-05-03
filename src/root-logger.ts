@@ -1,6 +1,6 @@
 import pino, {Logger} from 'pino'
 
-const logger = pino({prettyPrint: true, level: 'trace'})
+const logger = pino({prettyPrint: true, level: 'trace', redact: ['discord_client_token']})
 
 // Singletons are a no-no, but this is the only way to share the same Pino instance between the
 // application itself (NestFactory.create) and the logger provider.

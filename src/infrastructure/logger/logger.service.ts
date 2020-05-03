@@ -18,20 +18,23 @@ export class Logger implements ILogger {
         return this
     }
 
-    public child(child_options: ChildLoggerOptions): ILogger {
-        return new Logger(this.pino.child(child_options))
+    public child(options: ChildLoggerOptions = {}): ILogger {
+        return new Logger(this.pino.child(options))
     }
 
-    public child_for_service(service: object): ILogger {
-        return this.child({service: ctor_name(service)})
+    public child_for_service(service: object, options: ChildLoggerOptions = {}): ILogger {
+        return this.child({...options, service: ctor_name(service)})
     }
 
-    public child_for_command(command: FreakbotCommand<any>): ILogger {
-        return this.child({command: ctor_name(command)})
+    public child_for_command(
+        command: FreakbotCommand<any>,
+        options: ChildLoggerOptions = {},
+    ): ILogger {
+        return this.child({...options, command: ctor_name(command)})
     }
 
-    public child_for_controller(controller: object): ILogger {
-        return this.child({controller: ctor_name(controller)})
+    public child_for_controller(controller: object, options: ChildLoggerOptions = {}): ILogger {
+        return this.child({...options, controller: ctor_name(controller)})
     }
 
     public fatal(message: string, object: object = {}): void {
