@@ -13,11 +13,11 @@ import {UtilityModule} from './utility.module'
     controllers: [],
     providers: [
         {
-            provide: 'Commands',
+            provide: 'commands',
             useValue: Object.values(commands),
         },
         {
-            provide: 'CustomArgumentTypes',
+            provide: 'custom-argument-types',
             useValue: Object.values(types),
         },
         {

@@ -2,7 +2,8 @@ import {Module} from '@nestjs/common'
 import {Intents} from 'discord.js'
 import {CommandoClient as DiscordCommandoClient} from 'discord.js-commando'
 
-import {SoundProvider} from '../infrastructure'
+import {Configuration, Sound} from '../domain'
+import {parse_lua_data_file, SoundProvider} from '../infrastructure'
 
 import {UtilityModule} from './utility.module'
 
@@ -17,6 +18,13 @@ import {UtilityModule} from './utility.module'
         {
             provide: 'ISoundProvider',
             useClass: SoundProvider,
+        },
+        {
+            provide: 'sound-map',
+            inject: ['Configuration'],
+            async useFactory(config: Configuration): Promise<Map<number, Sound>> {
+                return parse_lua_data_file(config.voicepack_path)
+            },
         },
     ],
     exports: ['client-instance', 'ISoundProvider'],

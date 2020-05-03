@@ -19,14 +19,14 @@ import {get_root_logger} from '../root-logger'
             },
         },
         {
-            provide: 'configuration',
+            provide: 'configuration-object',
             useFactory(): unknown {
                 return require('config').util.toObject()
             },
         },
         {
             provide: 'Configuration',
-            inject: ['configuration'],
+            inject: ['configuration-object'],
             useFactory(configuration: unknown): Configuration {
                 return joi.attempt(configuration, configuration_schema)
             },

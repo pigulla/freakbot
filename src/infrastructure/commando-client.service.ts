@@ -18,8 +18,8 @@ export class CommandoClient implements OnModuleInit, OnModuleDestroy, ICommandoC
 
     public constructor(
         @Inject('client-instance') commando_client: DiscordClient,
-        @Inject('Commands') command_classes: Class<FreakbotCommand<any>>[],
-        @Inject('CustomArgumentTypes') argument_type_classes: Class<ArgumentType>[],
+        @Inject('commands') command_classes: Class<FreakbotCommand<any>>[],
+        @Inject('custom-argument-types') argument_type_classes: Class<ArgumentType>[],
         @Inject('Configuration') config: Configuration,
         @Inject('ILogger') logger: ILogger,
         module_ref: ModuleRef,
