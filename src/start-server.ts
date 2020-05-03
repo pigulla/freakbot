@@ -8,7 +8,6 @@ import {NormalizedPackageJson} from 'read-pkg-up'
 import {Configuration, ILogger, LogLevel} from './domain'
 import {Logger, adapt_for_nest} from './infrastructure/logger'
 import {AppModule} from './module'
-import {new_promise} from './util'
 
 type ShutdownFn = () => Promise<void>
 
@@ -31,7 +30,6 @@ async function create_application(log_level: LogLevel): Promise<INestApplication
 }
 
 export async function start_server(): Promise<ShutdownFn> {
-    const {promise, resolve} = new_promise<ShutdownFn>()
     const app = await create_application(LogLevel.DEBUG)
 
     const logger = app.get<ILogger>('ILogger')
@@ -43,7 +41,5 @@ export async function start_server(): Promise<ShutdownFn> {
     const {port, address} = server.address() as AddressInfo
 
     logger.info(`Application listening on ${address}:${port} (v${package_json.version})`, config)
-    resolve(() => app.close())
-
-    return promise
+    return () => app.close()
 }
