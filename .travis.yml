@@ -3,7 +3,7 @@ branches:
   only:
     - master
     - develop
-    - feature/travisci
+    - feature/heroku
 node_js:
   - "14"
   - "13"
