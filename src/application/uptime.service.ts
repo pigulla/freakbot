@@ -1,7 +1,12 @@
 import dayjs, {Dayjs} from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import relative_time from 'dayjs/plugin/relativeTime'
 
 import {IUptime} from '../domain/uptime.interface'
 import {Duration} from '../types'
+
+dayjs.extend(relative_time)
+dayjs.extend(duration)
 
 export class Uptime implements IUptime {
     private readonly started_at: Dayjs

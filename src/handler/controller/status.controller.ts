@@ -1,7 +1,7 @@
 import {Controller, Inject, Get} from '@nestjs/common'
+import {Dayjs} from 'dayjs'
 import {NormalizedPackageJson} from 'read-pkg-up'
 import simplegit, {SimpleGit} from 'simple-git/promise'
-import {Dayjs} from 'dayjs'
 
 import {Configuration, ILogger} from '../../domain'
 import {IUptime} from '../../domain/uptime.interface'

@@ -14,8 +14,12 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install --yes --no-install-recommends ffmpeg
 
-install: npm install
+install:
+   - npm install
+
+script:
+  - npm test
+  - docker build --tag freakbot .
 
 after_script: 
   - npm run codecov
-  - docker build --tag freakbot .
