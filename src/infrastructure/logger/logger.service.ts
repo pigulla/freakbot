@@ -1,7 +1,9 @@
 import {Injectable} from '@nestjs/common'
 import {Logger as Pino} from 'pino'
 
+import {FreakbotCommand} from '../../application/command/freakbot-command'
 import {ILogger, ChildLoggerOptions, LogLevel} from '../../domain'
+import {ctor_name} from '../../util'
 
 @Injectable()
 export class Logger implements ILogger {
@@ -20,12 +22,16 @@ export class Logger implements ILogger {
         return new Logger(this.pino.child(child_options))
     }
 
-    public child_for_service(name: string): ILogger {
-        return this.child({service: name})
+    public child_for_service(service: object): ILogger {
+        return this.child({service: ctor_name(service)})
     }
 
-    public child_for_command(name: string): ILogger {
-        return this.child({command: name})
+    public child_for_command(command: FreakbotCommand<any>): ILogger {
+        return this.child({command: ctor_name(command)})
+    }
+
+    public child_for_controller(controller: object): ILogger {
+        return this.child({controller: ctor_name(controller)})
     }
 
     public fatal(message: string, object: object = {}): void {

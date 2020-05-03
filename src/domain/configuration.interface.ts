@@ -3,6 +3,9 @@ import joi from '@hapi/joi'
 import {LogLevel} from './logger.interface'
 
 export interface Configuration {
+    readonly server_hostname: string
+    readonly server_port: number
+
     readonly log_level: {
         readonly application: LogLevel
         readonly discord_client: LogLevel
@@ -21,6 +24,8 @@ const log_level = joi
     .required()
 
 export const configuration_schema = joi.object().keys({
+    server_hostname: joi.string().min(1).required(),
+    server_port: joi.number().port().required(),
     log_level: joi
         .object()
         .keys({

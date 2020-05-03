@@ -1,4 +1,7 @@
 {
+    "server_hostname": "HOSTNAME",
+    "server_port": "PORT",
     "discord_client_token": "DISCORD_CLIENT_TOKEN",
-    "discord_user_id": "DISCORD_USER_ID"
+    "discord_user_id": "DISCORD_USER_ID",
+    "voicepack_path": "VOICEPACK_PATH"
 }

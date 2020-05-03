@@ -46,4 +46,4 @@ import {Logger} from '../infrastructure/logger'
     ],
     exports: ['Configuration', 'ILogger', 'package.json'],
 })
-export class UtilModule {}
+export class UtilityModule {}
