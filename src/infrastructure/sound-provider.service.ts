@@ -22,7 +22,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
         this.logger = logger.child_for_service(this)
         this.map = new Map()
 
-        this.logger.info('Service instantiated')
+        this.logger.debug('Service instantiated')
     }
 
     public async onModuleInit(): Promise<void> {
@@ -37,7 +37,7 @@ export class SoundProvider implements ISoundProvider, OnModuleInit {
             })
         }
 
-        this.logger.info('Service initialized')
+        this.logger.debug('Service initialized')
     }
 
     public get size(): number {

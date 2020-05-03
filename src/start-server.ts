@@ -1,45 +1,44 @@
-import {AddressInfo, Server} from 'net'
+import {AddressInfo} from 'net'
 
-import {INestApplication, LoggerService} from '@nestjs/common'
+import {INestApplication} from '@nestjs/common'
 import {NestFactory} from '@nestjs/core'
-import pino from 'pino'
+import {Logger as PinoLogger} from 'pino'
 import {NormalizedPackageJson} from 'read-pkg-up'
 
 import {Configuration, ILogger, LogLevel} from './domain'
 import {Logger, adapt_for_nest} from './infrastructure/logger'
 import {AppModule} from './module'
+import {new_promise} from './util'
 
-type ShutdownFn = () => Promise<void>
+export type ShutdownFn = () => Promise<void>
 
-function create_logger(log_level: LogLevel): Required<LoggerService> {
-    const pino_instance = pino({prettyPrint: true})
-    const root_logger = new Logger(pino_instance).set_level(log_level)
+async function create_application(
+    root_logger: PinoLogger,
+    log_level: LogLevel,
+): Promise<INestApplication> {
+    const logger = new Logger(root_logger).set_level(log_level)
+    const nest_logger = adapt_for_nest(logger)
+    const app = await NestFactory.create(AppModule, {logger: nest_logger})
 
-    return adapt_for_nest(root_logger)
-}
-
-async function create_application(log_level: LogLevel): Promise<INestApplication> {
-    const logger = create_logger(log_level)
-    const app = await NestFactory.create(AppModule)
-    // const app = await NestFactory.create(AppModule, {logger})
-
-    app.useLogger(logger)
+    // app.useLogger(nest_logger)
     app.enableShutdownHooks()
 
     return app
 }
 
-export async function start_server(): Promise<ShutdownFn> {
-    const app = await create_application(LogLevel.DEBUG)
+export async function start_server(root_logger: PinoLogger): Promise<ShutdownFn> {
+    const app = await create_application(root_logger, LogLevel.DEBUG)
+    const {promise, resolve} = new_promise<void>()
 
     const logger = app.get<ILogger>('ILogger')
     const config = app.get<Configuration>('Configuration')
     const package_json = app.get<NormalizedPackageJson>('package.json')
-    const server = app.getHttpServer() as Server
 
-    await app.listenAsync(config.server_port, config.server_hostname)
+    const server = await app.listen(config.server_port, config.server_hostname, () => resolve())
+    await promise
+
     const {port, address} = server.address() as AddressInfo
-
     logger.info(`Application listening on ${address}:${port} (v${package_json.version})`, config)
+
     return () => app.close()
 }

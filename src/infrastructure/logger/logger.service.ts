@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common'
 import {Logger as Pino} from 'pino'
 
-import {FreakbotCommand} from '../../application/command/freakbot-command'
+import {FreakbotCommand} from '../../application/command/freakbot.abstract-command'
 import {ILogger, ChildLoggerOptions, LogLevel} from '../../domain'
 import {ctor_name} from '../../util'
 

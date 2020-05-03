@@ -1,4 +1,4 @@
-import {FreakbotCommand} from '../application/command/freakbot-command'
+import {FreakbotCommand} from '../application/command/freakbot.abstract-command'
 
 export type ChildLoggerOptions = {
     level?: LogLevel

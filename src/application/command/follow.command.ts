@@ -1,21 +1,21 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
-import {CommandoMessage, CommandoClient, FriendlyError} from 'discord.js-commando'
+import {CommandoMessage, FriendlyError} from 'discord.js-commando'
 
-import {CommandGroup, ILogger} from '../../domain'
+import {CommandGroup, ICommandoClient, ILogger} from '../../domain'
 
-import {FreakbotCommand} from './freakbot-command'
+import {FreakbotCommand} from './freakbot.abstract-command'
 
 export class FollowCommand extends FreakbotCommand {
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('ICommandoClient') commando_client: ICommandoClient,
         @Inject('ILogger') logger: ILogger,
     ) {
         super(
-            commando_client,
+            commando_client.get_client(),
             {
                 name: 'follow',
-                aliases: [],
+                aliases: ['f'],
                 group: CommandGroup.SOUND,
                 memberName: 'follow',
                 description: 'Follow to your voice channel.',

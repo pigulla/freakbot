@@ -1,35 +1,32 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
-import {CommandoMessage, CommandoClient, FriendlyError} from 'discord.js-commando'
+import {CommandoMessage, FriendlyError} from 'discord.js-commando'
 import sample from 'lodash.sample'
 
-import {CommandGroup, ILogger, ISoundProvider} from '../../domain'
+import {CommandGroup, ICommandoClient, ILogger, ISoundProvider} from '../../domain'
 
-import {FreakbotCommand} from './freakbot-command'
+import {FreakbotSoundCommand} from './freakbot.sound-command'
 
-export class RandomCommand extends FreakbotCommand<string> {
-    private readonly sound_provider: ISoundProvider
-
+export class RandomCommand extends FreakbotSoundCommand<string> {
     public constructor(
-        @Inject('CommandoClient') commando_client: CommandoClient,
+        @Inject('ICommandoClient') commando_client: ICommandoClient,
         @Inject('ISoundProvider') sound_provider: ISoundProvider,
         @Inject('ILogger') logger: ILogger,
     ) {
         super(
-            commando_client,
+            commando_client.get_client(),
             {
                 name: 'random',
-                aliases: [],
+                aliases: ['rnd'],
                 group: CommandGroup.SOUND,
                 memberName: 'random',
-                description: 'Plays a random sound.',
+                description: 'Play a random sound.',
                 guildOnly: true,
                 argsType: 'single',
             },
+            sound_provider,
             logger,
         )
-
-        this.sound_provider = sound_provider
 
         this.logger.debug('Service instantiated')
     }
@@ -44,7 +41,7 @@ export class RandomCommand extends FreakbotCommand<string> {
             throw new FriendlyError('No matching sound found')
         }
 
-        await this.get_voice_connection().play(sound.filename)
+        await this.play_sound(message.author, sound)
         return message.reply(sound.title)
     }
 }

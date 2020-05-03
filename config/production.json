@@ -1,0 +1,7 @@
+{
+    "server_hostname": "0.0.0.0",
+    "log_level": {
+        "application": "info",
+        "discord_client": "warn"
+    }
+}

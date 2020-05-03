@@ -1,11 +1,21 @@
 language: node_js
+
 branches:
   only:
     - master
+
+services:
+  - docker
+
 node_js:
   - "14"
+
 before_install:
   - sudo apt-get update
   - sudo apt-get install --yes --no-install-recommends ffmpeg
+
 install: npm install
-after_script: npm run codecov
+
+after_script: 
+  - npm run codecov
+  - docker build --tag freakbot .

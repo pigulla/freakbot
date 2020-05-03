@@ -1,38 +1,38 @@
 import {Inject} from '@nestjs/common'
 import {Message} from 'discord.js'
 import {CommandoMessage} from 'discord.js-commando'
-import {NormalizedPackageJson} from 'read-pkg-up'
 
 import {CommandGroup, ICommandoClient, ILogger} from '../../domain'
+import {IUptime} from '../../domain/uptime.interface'
 
 import {FreakbotCommand} from './freakbot.abstract-command'
 
-export class VersionCommand extends FreakbotCommand {
-    private readonly package_json: NormalizedPackageJson
+export class UptimeCommand extends FreakbotCommand {
+    private readonly uptime: IUptime
 
     public constructor(
         @Inject('ICommandoClient') commando_client: ICommandoClient,
-        @Inject('package.json') package_json: NormalizedPackageJson,
+        @Inject('IUptime') uptime: IUptime,
         @Inject('ILogger') logger: ILogger,
     ) {
         super(
             commando_client.get_client(),
             {
-                name: 'version',
-                aliases: ['v'],
+                name: 'uptime',
+                aliases: ['up'],
                 group: CommandGroup.META,
-                memberName: 'version',
-                description: 'Display the version of the Freakbot.',
+                memberName: 'uptime',
+                description: 'Show for how long the Freakbot has been running.',
             },
             logger,
         )
 
-        this.package_json = package_json
+        this.uptime = uptime
 
         this.logger.debug('Service instantiated')
     }
 
     protected async do_run(message: CommandoMessage): Promise<Message | Message[]> {
-        return message.reply(`Freakbot is at version ${this.package_json.version}`)
+        return message.reply(this.uptime.get_uptime().humanize(false))
     }
 }
