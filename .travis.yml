@@ -2,8 +2,6 @@ language: node_js
 branches:
   only:
     - master
-    - develop
-    - feature/heroku
 node_js:
   - "14"
 before_install:
