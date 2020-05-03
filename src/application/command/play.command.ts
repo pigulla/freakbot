@@ -45,10 +45,10 @@ export class PlayCommand extends FreakbotCommand<Args> {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage, args: Args): Promise<Message | Message[]> {
+    protected async do_run(message: CommandoMessage, args: Args): Promise<Message | Message[]> {
         const sound = this.sound_provider.get(args.sound_id)
 
         await this.get_voice_connection().play(sound.filename)
-        return msg.reply(sound.title)
+        return message.reply(sound.title)
     }
 }

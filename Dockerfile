@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:14-buster
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG NPM_PACKAGES=/app/npm
@@ -10,7 +10,10 @@ ENV HOSTNAME '0.0.0.0'
 
 USER root
 RUN groupadd --system freakbot && useradd --no-log-init --system --gid freakbot freakbot
-RUN apt-get update && apt-get install --yes --no-install-recommends bash ffmpeg
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+        bash \
+        ffmpeg
 
 WORKDIR /app
 RUN chown freakbot:freakbot -R /app

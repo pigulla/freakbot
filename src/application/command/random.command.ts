@@ -34,7 +34,7 @@ export class RandomCommand extends FreakbotCommand<string> {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage, input: string): Promise<Message | Message[]> {
+    protected async do_run(message: CommandoMessage, input: string): Promise<Message | Message[]> {
         const search_term = input.trim()
         const sound = sample(
             search_term ? this.sound_provider.search(input) : this.sound_provider.list(),
@@ -45,6 +45,6 @@ export class RandomCommand extends FreakbotCommand<string> {
         }
 
         await this.get_voice_connection().play(sound.filename)
-        return msg.reply(sound.title)
+        return message.reply(sound.title)
     }
 }

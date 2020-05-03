@@ -22,13 +22,33 @@ export abstract class FreakbotCommand<T = void> extends Command {
         this.logger = logger.child_for_command(this)
     }
 
-    protected abstract async do_run(msg: CommandoMessage, args: T): Promise<Message | Message[]>
+    protected abstract async do_run(message: CommandoMessage, args: T): Promise<Message | Message[]>
 
-    public async run(msg: CommandoMessage, args: unknown): Promise<Message | Message[]> {
+    public async run(message: CommandoMessage, args: unknown): Promise<Message | Message[]> {
+        const {content, author} = message
+        const user_id = `${author.username}#${author.discriminator}`
+
+        this.logger.trace(`Processing message`, {user_id, content})
+
         try {
-            return await this.do_run(msg, args as T)
+            const result = await this.do_run(message, args as T)
+            this.logger.debug('Message processed', {user_id, content})
+            return result
         } catch (error) {
-            this.logger.warn(error.message, {content: msg.content})
+            if (error instanceof FriendlyError) {
+                this.logger.debug('Message processing unsuccessful', {
+                    user_id,
+                    content,
+                    error_message: error.message,
+                })
+            } else {
+                this.logger.warn('Message processing failed', {
+                    user_id,
+                    content,
+                    error_message: error.message,
+                })
+            }
+
             throw error
         }
     }

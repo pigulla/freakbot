@@ -27,14 +27,14 @@ export class FollowCommand extends FreakbotCommand {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage): Promise<Message | Message[]> {
-        const voice_channel = msg.member.voice.channel
+    protected async do_run(message: CommandoMessage): Promise<Message | Message[]> {
+        const voice_channel = message.member.voice.channel
 
         if (!voice_channel) {
             throw new FriendlyError('You must be in a voice channel to use this command.')
         }
 
         await voice_channel.join()
-        return msg.reply(`Happy to join you in ${voice_channel.name}`)
+        return message.reply(`Happy to join you in ${voice_channel.name}`)
     }
 }

@@ -32,7 +32,7 @@ export class VersionCommand extends FreakbotCommand {
         this.logger.debug('Service instantiated')
     }
 
-    protected async do_run(msg: CommandoMessage): Promise<Message | Message[]> {
-        return msg.reply(`3 x 14 is 38 und 12 das gibt ${this.package_json.version}...`)
+    protected async do_run(message: CommandoMessage): Promise<Message | Message[]> {
+        return message.reply(`3 x 14 is 38 und 12 das gibt ${this.package_json.version}...`)
     }
 }
