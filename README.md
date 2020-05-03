@@ -4,7 +4,7 @@
 [![Travis CI](https://img.shields.io/travis/com/pigulla/freakbot/master?style=flat-square)](https://travis-ci.com/pigulla/freakbot)
 [![Dependencies](https://img.shields.io/david/pigulla/freakbot?style=flat-square)](https://david-dm.org/pigulla/freakbot)
 [![DevDependencies](https://img.shields.io/david/dev/pigulla/freakbot?style=flat-square)](https://david-dm.org/dev/pigulla/freakbot)
-[![codecov](https://codecov.io/gh/pigulla/freakbot/branch/master/graph/badge.svg)](https://codecov.io/gh/pigulla/freakbot)
+[![codecov](https://img.shields.io/codecov/c/github/pigulla/freakbot?style=flat-square)](https://codecov.io/gh/pigulla/freakbot)
 [![Snyk](https://snyk.io/test/github/pigulla/freakbot/badge.svg?style=flat-square)](https://snyk.io/test/github/pigulla/freakbot)
 
 ## Description
