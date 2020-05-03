@@ -1,7 +1,7 @@
 {
   "name": "freakbot",
   "version": "0.0.1",
-  "description": "",
+  "description": "The Freakbrothers Discord Bot",
   "author": "Raphael Pigulla <pigulla@four66.com>",
   "private": true,
   "license": "MIT",
@@ -16,7 +16,8 @@
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "prettier": "prettier --write src test",
     "test": "npm run prettier && npm run lint && npm run mocha && npm audit",
-    "mocha": "nyc mocha 'test/**/*.spec.ts'"
+    "mocha": "nyc mocha 'test/**/*.spec.ts'",
+    "codecov": "bash -c 'bash <(curl https://codecov.io/bash) -Z -f ./coverage/lcov.info'"
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.1",
