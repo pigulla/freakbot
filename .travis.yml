@@ -1,0 +1,17 @@
+language: node_js
+branches:
+  only:
+    - master
+    - develop
+    - feature/travisci
+node_js:
+  - "14"
+  - "13"
+  - "12"
+  - "11"
+  - "10"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install --yes --no-install-recommends ffmpeg
+
+install: npm install
