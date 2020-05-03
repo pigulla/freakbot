@@ -25,7 +25,12 @@ export abstract class FreakbotCommand<T = void> extends Command {
     protected abstract async do_run(msg: CommandoMessage, args: T): Promise<Message | Message[]>
 
     public async run(msg: CommandoMessage, args: unknown): Promise<Message | Message[]> {
-        return this.do_run(msg, args as T)
+        try {
+            return await this.do_run(msg, args as T)
+        } catch (error) {
+            this.logger.warn(error.message, {content: msg.content})
+            throw error
+        }
     }
 
     protected get_voice_connection(): VoiceConnection {

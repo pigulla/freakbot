@@ -31,7 +31,7 @@ export class DiscordClient implements OnModuleInit, OnModuleDestroy {
         this.argument_type_classes = argument_type_classes
         this.module_ref = module_ref
 
-        const discord_logger = this.logger
+        const discord_logger = logger
             .child({subsystem: 'discord '})
             .set_level(config.log_level.discord_client)
 
@@ -73,7 +73,7 @@ export class DiscordClient implements OnModuleInit, OnModuleDestroy {
     private register_event_listeners(discord_logger: ILogger): void {
         this.commando_client.on('debug', message => discord_logger.debug(message))
         this.commando_client.on('warn', message => discord_logger.warn(message))
-        this.commando_client.on('error', error => discord_logger.error('Error', error))
+        this.commando_client.on('error', error => discord_logger.error(error.message, error))
         this.commando_client.on('message', message =>
             discord_logger.trace('Message received', {message}),
         )
