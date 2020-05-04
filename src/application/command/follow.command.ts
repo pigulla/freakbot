@@ -34,7 +34,12 @@ export class FollowCommand extends FreakbotCommand {
             throw new FriendlyError('You must be in a voice channel to use this command.')
         }
 
-        await voice_channel.join()
+        try {
+            await voice_channel.join()
+        } catch (error) {
+            return message.reply(`Sorry, looks like I can't follow you to ${voice_channel.name}`)
+        }
+        
         return message.reply(`Happy to join you in ${voice_channel.name}`)
     }
 }
