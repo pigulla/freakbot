@@ -59,13 +59,11 @@ export abstract class FreakbotCommand<T = void> extends Command {
             member => member.user === message.author,
         )
 
-        if (is_in_channel) {
-            return
+        if (!is_in_channel) {
+            throw new FriendlyError(
+                'You must be in the same voice channel as the Freakbot to use this command.',
+            )
         }
-
-        throw new FriendlyError(
-            'You must be in the same voice channel as the Freakbot to use this command.',
-        )
     }
 
     protected get_voice_connection(): VoiceConnection {
