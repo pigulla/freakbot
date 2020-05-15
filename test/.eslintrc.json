@@ -1,8 +1,15 @@
 {
     "env": {
-        "mocha": true
+        "jest": true
     },
     "rules": {
         "no-unused-expressions": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "typescript": {
+                "directory": "test/tsconfig.json"
+            }
+        }
     }
 }

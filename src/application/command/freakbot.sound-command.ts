@@ -39,7 +39,7 @@ export abstract class FreakbotSoundCommand<T = void> extends FreakbotCommand<T> 
         }
     }
 
-    protected get_voice_connection(): VoiceConnection {
+    public get_voice_connection(): VoiceConnection {
         const voice_connections = this.client.voice?.connections.array()
 
         if (!voice_connections || voice_connections.length === 0) {

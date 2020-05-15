@@ -1,4 +1,4 @@
-import {Message, VoiceConnection} from 'discord.js'
+import {Message} from 'discord.js'
 import {
     Command,
     CommandoMessage,
@@ -51,28 +51,5 @@ export abstract class FreakbotCommand<T = void> extends Command {
 
             throw error
         }
-    }
-
-    protected async assert_author_is_in_voice_channel(message: Message): Promise<void> {
-        const voice_connection = await this.get_voice_connection()
-        const is_in_channel = voice_connection.channel.members.some(
-            member => member.user === message.author,
-        )
-
-        if (!is_in_channel) {
-            throw new FriendlyError(
-                'You must be in the same voice channel as the Freakbot to use this command.',
-            )
-        }
-    }
-
-    protected get_voice_connection(): VoiceConnection {
-        const voice_connections = this.client.voice?.connections.array()
-
-        if (!voice_connections || voice_connections.length === 0) {
-            throw new FriendlyError('You must invite the bot to a voice channel first')
-        }
-
-        return voice_connections[0]
     }
 }

@@ -14,11 +14,6 @@
                 ".ts",
                 ".tsx"
             ]
-        },
-        "import/resolver": {
-            "typescript": {
-                "alwaysTryTypes": true
-            }
         }
     },
     "extends": [

@@ -1,36 +1,27 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "types": ["node"],
-    "paths": {
-      "~src/*": [
-        "src/*"
-      ],
-      "~mock": [
-        "test/mock/index.ts"
-      ],
-      "~mock/*": [
-        "test/mock/*"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+    "compilerOptions": {
+        "allowJs": false,
+        "module": "commonjs",
+        "declaration": true,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "types": [
+            "node"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }
