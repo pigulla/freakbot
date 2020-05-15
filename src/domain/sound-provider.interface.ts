@@ -7,7 +7,7 @@ export interface Sound {
 }
 
 export interface ISoundProvider {
-    readonly size: number
+    size(): number
     list(): Sound[]
     search(term: string): Sound[]
     exists(id: number): boolean

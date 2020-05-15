@@ -24,7 +24,6 @@ import {UtilityModule} from './utility.module'
             provide: 'ICommandoClient',
             useClass: CommandoClient,
         },
-
         DiscordHandler,
     ],
     exports: [],

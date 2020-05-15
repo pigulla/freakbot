@@ -8,7 +8,7 @@ import {FreakbotCommand} from './freakbot.abstract-command'
 export abstract class FreakbotSoundCommand<T = void> extends FreakbotCommand<T> {
     protected readonly sound_provider: ISoundProvider
 
-    public constructor(
+    protected constructor(
         commando_client: CommandoClient,
         command_info: CommandInfo,
         sound_provider: ISoundProvider,

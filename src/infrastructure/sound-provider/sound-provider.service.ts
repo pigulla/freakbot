@@ -16,7 +16,7 @@ export class SoundProvider implements ISoundProvider {
         this.logger.debug('Service instantiated')
     }
 
-    public get size(): number {
+    public size(): number {
         return this.map.size
     }
 

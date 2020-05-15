@@ -50,7 +50,6 @@ export class CommandoClient implements OnModuleInit, OnModuleDestroy, ICommandoC
         this.commando_client.registry.registerGroups([...command_groups.entries()])
         this.commando_client.registry.registerTypes(await this.create(argument_type_classes))
         this.commando_client.registry.registerCommands(await this.create(command_classes))
-
         this.commando_client.on('ready', () => {
             this.logger.info('Client is ready')
             resolve()
